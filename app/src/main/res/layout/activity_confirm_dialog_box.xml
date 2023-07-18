@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_margin="3dp"
+    android:layout_gravity="center"
+    android:layout_height="wrap_content"
+    android:paddingVertical="20dp"
+    android:background="@drawable/dialogbox_shape"
+    android:orientation="vertical"
+    >
+
+  <TextView
+      android:id="@+id/heading"
+      android:layout_width="match_parent"
+      android:textAlignment="center"
+      android:paddingHorizontal="5dp"
+      android:layout_height="wrap_content"
+      android:text="Heading"
+      android:textColor="@color/white"
+      android:textSize="35dp"
+      android:textStyle="bold"
+      android:layout_marginVertical="5dp"
+      android:layout_gravity="center_horizontal"
+      />
+
+  <TextView
+      android:id="@+id/content"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingHorizontal="10dp"
+      android:text="This is the content of the dialog box"
+      android:textAlignment="center"
+      android:textColor="@color/white"
+      android:textSize="20dp"
+    />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:layout_marginTop="15dp">
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Cancel"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="#C10303"
+        android:textColor="@color/white"
+        android:layout_marginHorizontal="10dp"/>
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="Confirm"
+        android:background="@drawable/roundbutton"
+        android:backgroundTint="#0EB566"
+        android:textColor="@color/white"
+        android:layout_marginHorizontal="10dp"/>
+  </LinearLayout>
+  </LinearLayout>
