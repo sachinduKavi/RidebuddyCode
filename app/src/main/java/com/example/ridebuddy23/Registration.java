@@ -10,12 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +48,7 @@ import java.util.Map;
 
 public class Registration extends AppCompatActivity {
     Button reg_btn;
+    String state;
     CheckBox checkBox;
     Bitmap bitmap_image;
     EditText registration_number, chassis_number, seats;
@@ -52,11 +56,13 @@ public class Registration extends AppCompatActivity {
     Spinner spinner;
     SharedPreferences sharedPreferences;
     ActivityResultLauncher<Intent> activityResultLauncher;
+    Dialog progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
+        // Setting up progress bar
+        progressBar.setContentView(R.layout.progress_popup);
         sharedPreferences = getSharedPreferences("User_Details", MODE_PRIVATE);
 
         spinner = findViewById(R.id.spinner);
@@ -122,9 +128,16 @@ public class Registration extends AppCompatActivity {
                 public void onResponse(String response) {
                     System.out.println("Response" + response);
                     try {
-                        System.out.println(response);
                         JSONObject jsonObject = new JSONObject(response);
-                        System.out.println(jsonObject.getString("state"));
+                        state = jsonObject.getString("state");
+                        System.out.println("Activity State: " + state);
+                        // Check whether data inserted or not
+                        if(state.equals("Data Inserted"))
+                            Toast.makeText(getApplicationContext(), "Vehicle registered successfully", Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(getApplicationContext(), "Failed vehicle registration", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(getApplicationContext(), MyProfile.class));
+
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
