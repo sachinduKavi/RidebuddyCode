@@ -33,6 +33,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -118,6 +121,13 @@ public class Registration extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     System.out.println("Response" + response);
+                    try {
+                        System.out.println(response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        System.out.println(jsonObject.getString("status"));
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

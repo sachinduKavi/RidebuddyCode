@@ -65,6 +65,6 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void manage_vehicle(View view) {
-        startActivity(new Intent(this, VehicleInformation.class));
+        startActivity(new Intent(this, Registration.class));
     }
 }
