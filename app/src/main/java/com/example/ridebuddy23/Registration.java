@@ -124,7 +124,7 @@ public class Registration extends AppCompatActivity {
                     try {
                         System.out.println(response);
                         JSONObject jsonObject = new JSONObject(response);
-                        System.out.println(jsonObject.getString("status"));
+                        System.out.println(jsonObject.getString("state"));
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }
