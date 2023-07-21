@@ -44,9 +44,11 @@ public class EditProfile extends AppCompatActivity {
     Bitmap bitmap;
     EditText user_name02, email, mobile_num, home_address, e_contact;
     RadioButton gender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_edit_profile);
 
         ImageView profile_image = findViewById(R.id.profile_image);

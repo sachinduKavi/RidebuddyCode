@@ -56,13 +56,13 @@ public class Registration extends AppCompatActivity {
     Spinner spinner;
     SharedPreferences sharedPreferences;
     ActivityResultLauncher<Intent> activityResultLauncher;
-    Dialog progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         // Setting up progress bar
-        progressBar.setContentView(R.layout.progress_popup);
+
         sharedPreferences = getSharedPreferences("User_Details", MODE_PRIVATE);
 
         spinner = findViewById(R.id.spinner);
@@ -151,7 +151,6 @@ public class Registration extends AppCompatActivity {
                 protected Map<String, String> getParams(){
                     Map<String, String> paramV = new HashMap<>();
                     paramV.put("vehicle_image", base64Image);
-                    System.out.println("Spinner Test" + spinner.getSelectedItem().toString() + registration_number.getText().toString());
                     paramV.put("vehicle_type", spinner.getSelectedItem().toString());
                     paramV.put("r_number", registration_number.getText().toString());
                     paramV.put("c_number", chassis_number.getText().toString());
