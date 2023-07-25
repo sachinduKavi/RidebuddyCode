@@ -3,9 +3,12 @@ package com.example.ridebuddy23;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,6 +25,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,19 +36,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VehicleInformation extends AppCompatActivity {
-
+    VehicleDetails[] vehicleObjList;
+    BottomSheetDialog vehicle_information;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vehicle_information);
 
+        // PopUp
+        vehicle_information = new BottomSheetDialog(this);
+        vehicle_information.setContentView(R.layout.vehicle_details);
 
-        String[] names = {"BHM2476", "YN3487", "CGH762", "JCB4586"};
         new VehicleFetch().start();
-        System.out.println("Testing....");
-
-
     }
+
+    public void myProfile(){startActivity(new Intent(this, MyProfile.class));}
 
     public void createVehicle(String regNum, String imageLink){
         LinearLayout linearLayout = findViewById(R.id.container_v);
@@ -59,14 +67,49 @@ public class VehicleInformation extends AppCompatActivity {
             reg_num.setText("");
         }
         veh_image.setClickable(true);
-        veh_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Registration.class));
-            }
-        });
+        if(imageLink == null) {
+            veh_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getApplicationContext(), Registration.class));
+                }
+            });
+        }else{
+            veh_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Click " + regNum, Toast.LENGTH_SHORT).show();
+                    VehicleDetails thisVehicle = null;
+                    for(VehicleDetails singleObj: vehicleObjList){
+                        if(regNum.equals(singleObj.getRegNum())){
+                            thisVehicle = singleObj;
+                        }
+                    }
+                    System.out.println(thisVehicle);
+                    bottomSheet(thisVehicle);
+                    vehicle_information.show();
+                }
+            });
+        }
 
         linearLayout.addView(view);
+    }
+
+    public void bottomSheet(VehicleDetails vehicle) {
+        TextView vehicle_type = vehicle_information.findViewById(R.id.type_v);
+        TextView reg_num = vehicle_information.findViewById(R.id.reg_number);
+        TextView chassis_number = vehicle_information.findViewById(R.id.chassis_num);
+        TextView seats = vehicle_information.findViewById(R.id.seats);
+        TextView status = vehicle_information.findViewById(R.id.vehicle_level);
+        ImageView image = (ImageView) vehicle_information.findViewById(R.id.vehicle_image);
+
+        vehicle_type.setText(vehicle.getVehicleType());
+        reg_num.setText(vehicle.getRegNum());
+        chassis_number.setText(vehicle.getChassisNumber());
+        seats.setText("" +vehicle.getSeats());
+        status.setText(vehicle.getLevel());
+
+        new SetImageFromURL(image, "https://ridebuddy.000webhostapp.com/" + vehicle.getImageLink());
     }
 
     class VehicleFetch extends Thread{
@@ -85,12 +128,20 @@ public class VehicleInformation extends AppCompatActivity {
                         String status = jsonObject.getString("Status");
                         if(status.equals("Success")){
                             JSONArray vehicleDetails = jsonObject.getJSONArray("data");
-                            System.out.println(vehicleDetails.length());
 
-//                            VehicleDetails[] vehicleDetails1 = new VehicleDetails[vehicleDetails.length()];
+                            vehicleObjList = new VehicleDetails[vehicleDetails.length()];
                             for(int i = 0; i < vehicleDetails.length(); i++){
                                 JSONObject singleVehicle = vehicleDetails.getJSONObject(i);
                                 createVehicle(singleVehicle.getString("reg_num"), singleVehicle.getString("image_link"));
+                                // Add values to separate obj
+                                vehicleObjList[i] = new VehicleDetails(
+                                        singleVehicle.getString("vehicle_type"),
+                                        singleVehicle.getString("image_link"),
+                                        singleVehicle.getString("reg_num"),
+                                        singleVehicle.getString("chassis_num"),
+                                        singleVehicle.getString("level"),
+                                        Integer.parseInt(singleVehicle.getString("seats"))
+                                );
                             }
 
                         }

@@ -1,5 +1,7 @@
 package com.example.ridebuddy23;
 
+import androidx.annotation.NonNull;
+
 public class VehicleDetails {
     String vehicleType, imageLink, regNum, chassisNumber, level;
     int seats;
@@ -12,8 +14,10 @@ public class VehicleDetails {
         this.level = level;
         this.seats =seats;
     }
-    VehicleDetails(){
-
+    VehicleDetails(){}
+    @NonNull
+    public String toString(){
+        return this.regNum;
     }
 
     public String getVehicleType() {
