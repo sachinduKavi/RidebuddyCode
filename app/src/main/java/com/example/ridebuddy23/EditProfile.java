@@ -175,7 +175,6 @@ public class EditProfile extends AppCompatActivity {
 
     public void close_edit(View view) {
         startActivity(new Intent(this, MyProfile.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-
     }
 
 }
