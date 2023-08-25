@@ -44,9 +44,8 @@ public class CreateUserAccount extends AppCompatActivity {
                     password.getText().toString(),
                     "default",
                     2,
-                    (byte)1,
                     "2001-10-12",
-                    (byte)1);
+                    (byte)1, "U0000006");
 
             InsertUser insertUser = new InsertUser(userDetails);
             insertUser.start();

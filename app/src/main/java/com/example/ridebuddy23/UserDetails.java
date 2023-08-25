@@ -1,9 +1,9 @@
 package com.example.ridebuddy23;
 
 public class UserDetails {
-    String user_name, email, password, DP, mobile, user_dob;
+    String user_name, email, password, DP, mobile, user_dob, userID;
     byte gender;
-    int profile_state, vehicle_state;
+    int profile_state;
 
     public String getUser_dob() {
         return user_dob;
@@ -21,16 +21,25 @@ public class UserDetails {
         this.gender = gender;
     }
 
-    public UserDetails(String user_name, String email, String mobile, String password, String DP, int profile_state, byte vehicle_state, String user_dob, byte gender) {
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public UserDetails(String user_name, String email, String mobile, String password, String DP, int profile_state, String user_dob, byte gender, String userID) {
         this.user_name = user_name;
         this.email = email;
         this.password = password;
         this.DP = DP;
         this.mobile = mobile;
         this.user_dob = user_dob;
+        this.userID = userID;
         this.gender = gender;
         this.profile_state = profile_state;
-        this.vehicle_state = vehicle_state;
+
     }
 
     public String getMobile() {
@@ -41,19 +50,16 @@ public class UserDetails {
         this.mobile = mobile;
     }
 
-    public int getVehicle_state() {
-        return vehicle_state;
-    }
 
     // For Authentication
-    public UserDetails(String email, String password){
+    public UserDetails(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
     @Override
-    public String toString(){
-        String all_string = user_name + "\n" + email + "\n" + mobile + "\n" + password + "\n" + DP + "\n" + profile_state + "\n" + '\n' + "\n" + vehicle_state + user_dob ;
+    public String toString() {
+        String all_string = user_name + "\n" + email + "\n" + mobile + "\n" + password + "\n" + DP + "\n" + profile_state + "\n" + '\n' + "\n" + user_dob + "\n" + userID;
         return all_string;
     }
 
@@ -97,11 +103,4 @@ public class UserDetails {
         this.profile_state = profile_state;
     }
 
-    public int isVehicle_state() {
-        return vehicle_state;
-    }
-
-    public void setVehicle_state(int vehicle_state) {
-        this.vehicle_state = vehicle_state;
-    }
 }

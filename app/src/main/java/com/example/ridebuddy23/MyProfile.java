@@ -45,7 +45,7 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void back_home(View view) {
-        startActivity(new Intent(this, MainActivity.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        startActivity(new Intent(this, HomeScreen.class), ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     public void EditProfile(View view) {

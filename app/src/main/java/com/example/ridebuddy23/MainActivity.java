@@ -14,6 +14,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -45,25 +50,41 @@ public class MainActivity extends AppCompatActivity {
     public void login_click(View view) {
         String user_email_final = user_email.getText().toString();
 
-        System.out.println(user_email_final);
-        Thread thread = new FetchUserDetails(user_email_final);
-        thread.start();
+        LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+        params.put("userID", "null");
+        params.put("userEmail", user_email_final);
+        CreateConnection connection = new CreateConnection("userDetails/getUserDetails", params, HttpURLConnection.HTTP_OK, "GET");
+        connection.start();
 
-
-//        progressbar_layout.setContentView(R.layout.progress_popup);
-//        progressbar_layout.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        // Waits until sub thread join the main thread
         try {
-            thread.join();
-        } catch (InterruptedException e) {
+            connection.join();
+            JSONObject data = connection.getJsonResponse().getJSONArray("data").getJSONObject(0);
+            System.out.println(data);
+
+            // Creating userDetails object
+            UserDetails userDetails = new UserDetails(
+                    data.getString("f_name") + " " + data.getString("l_name"),
+                    data.getString("user_email"),
+                    data.getString("mobileNumber"),
+                    data.getString("password"),
+                    data.getString("dp_image"),
+                    data.getInt("rating"),
+                    data.getString("dob"),
+                    (byte)data.getInt("gender"),
+                    data.getString("userID")
+            );
+
+            // Passing for authentication
+            System.out.println("User Details: " + userDetails);
+            authentication(userDetails);
+
+        } catch (InterruptedException | JSONException e) {
             throw new RuntimeException(e);
         }
 
 
-        UserDetails userDetails = ((FetchUserDetails)thread).getUserDetails();
-        // Passing for authentication
-        authentication(userDetails);
+
+
 
     }
 
@@ -84,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("password", userDetails.getPassword());
             editor.putString("DP", userDetails.getDP());
             editor.putInt("profile_state", userDetails.getProfile_state());
-            editor.putInt("vehicle_state", userDetails.getVehicle_state());
+            editor.putString("userID", userDetails.getUserID());
             editor.putString("user_dob", userDetails.getUser_dob());
             editor.putInt("gender", userDetails.getGender());
-            editor.commit();
+            editor.apply();
 
             Toast.makeText(this, "Login Success", Toast.LENGTH_LONG).show();
             System.out.println("Login success");
