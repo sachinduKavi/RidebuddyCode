@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 
@@ -47,8 +48,19 @@ public class CreateUserAccount extends AppCompatActivity {
                     "2001-10-12",
                     (byte)1, "U0000006");
 
-            InsertUser insertUser = new InsertUser(userDetails);
-            insertUser.start();
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("fName", f_name.getText());
+            params.put("LName", l_name.getText());
+            params.put("userEmail", email.getText());
+            params.put("pass", password.getText());
+            params.put("mobile", mobile_num.getText());
+            CreateConnection connection = new CreateConnection("userDetails/newUser", params, 201, "POST");
+            connection.start();
+
+            startActivity(new Intent(this, MainActivity.class));
+
+//            InsertUser insertUser = new InsertUser(userDetails);
+//            insertUser.start();
         }else{
             error_box.setText("Password mismatch");
             error_box.setVisibility(View.VISIBLE);

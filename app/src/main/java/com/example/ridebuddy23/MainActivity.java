@@ -74,12 +74,14 @@ public class MainActivity extends AppCompatActivity {
                     data.getString("userID")
             );
 
+            startActivity(new Intent(this, MainActivity.class));
+
             // Passing for authentication
             System.out.println("User Details: " + userDetails);
             authentication(userDetails);
 
         } catch (InterruptedException | JSONException e) {
-            throw new RuntimeException(e);
+            Toast.makeText(this, "Incorrect User Name", Toast.LENGTH_SHORT).show();
         }
 
 

@@ -197,7 +197,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:onClick="create_ride"
+                android:onClick="myActivities"
                 android:padding="3dp"
                 app:srcCompat="@drawable/list"
                 />

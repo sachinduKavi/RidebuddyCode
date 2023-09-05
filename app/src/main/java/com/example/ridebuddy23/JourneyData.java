@@ -6,11 +6,20 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class JourneyData implements Parcelable {
-    public String dateTime, startCity, endCity, description;
+    public String dateTime, startCity, endCity, description, journeyID, submittedDate;
     public String status = "null";
+
+    public String getSubmittedDate() {
+        return submittedDate;
+    }
+
     public double sLat, sLog, eLat, eLog;
 
     public JourneyData(){}
+
+    public String getJourneyID() {
+        return journeyID;
+    }
 
     public double getsLat() {
         return sLat;

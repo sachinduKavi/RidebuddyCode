@@ -61,6 +61,12 @@ public class HomeScreen extends AppCompatActivity {
         startActivity(new Intent(this, JourneyRegister.class));
     }
 
+    public void myActivities(View view) {
+
+        System.out.println("Function is working");
+        startActivity(new Intent(this, OnActivities.class));
+    }
+
     public void go_myProfile(View view) {
         Intent intent = new Intent(this, MyProfile.class);
         startActivity(intent);

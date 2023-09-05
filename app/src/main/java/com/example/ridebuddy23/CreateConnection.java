@@ -58,7 +58,7 @@ public class CreateConnection extends Thread implements UrlConnection{
         // Creating connection with the URL
         try{
             for (String key: this.params.keySet()) {
-                this.baseURL += "/" + params.get(key).toString().replace(" ", "+").replace(":", "s").replace(".", "d");
+                this.baseURL += "/" + params.get(key).toString().replace(" ", "+").replace(":", "s").replace(".", "*");
             }
             this.baseURL = DOMAIN + this.baseURL;
             URL url = new URL(baseURL);
