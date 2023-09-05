@@ -28,7 +28,7 @@ public class InsertUser extends Thread{
                     "&password=" + userDetails.getPassword() +
                     "&DP=" + userDetails.getDP() +
                     "&profile_state=" + userDetails.getProfile_state() +
-                    "&vehicle_state=" + userDetails.getVehicle_state() +
+                    "&vehicle_state=" + 1 +
                     "&user_dob=" + userDetails.getUser_dob() +
                     "&gender=" + userDetails.getGender());
             HttpURLConnection httpURLConnection1 = (HttpURLConnection) insert_url.openConnection();

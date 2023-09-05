@@ -8,6 +8,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="blue_700">#232B69</color>
     <color name="transparent_black">#85000000</color>
+    <color name="transparent">#00000000</color>
     <color name="disable_color">#ADADAD</color>
     <color name="enable_color">#00B4A7</color>
 

@@ -28,7 +28,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class HomeScreen extends AppCompatActivity {
     @Override
@@ -51,11 +53,18 @@ public class HomeScreen extends AppCompatActivity {
             new SetImageFromURL(profile_image, "https://ridebuddy.000webhostapp.com/" + dp_link);
 
         // Loading advertisements
-        Thread thread = new LoadAdvertisements();
-        thread.start();
+        new LoadAdvertisements();
+
     }
 
     public void create_ride(View view) {
+        startActivity(new Intent(this, JourneyRegister.class));
+    }
+
+    public void myActivities(View view) {
+
+        System.out.println("Function is working");
+        startActivity(new Intent(this, OnActivities.class));
     }
 
     public void go_myProfile(View view) {
@@ -64,13 +73,11 @@ public class HomeScreen extends AppCompatActivity {
     }
 
     class CustomAdapter extends ArrayAdapter<String>{
-        Context context;
         ArrayList link_list;
         public CustomAdapter(@NonNull Context context, ArrayList link_list){
             super(context, R.layout.feature_single_row, link_list);
             this.link_list = link_list;
         }
-
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, ViewGroup parent){
@@ -89,53 +96,35 @@ public class HomeScreen extends AppCompatActivity {
         }
     }
 
-    class LoadAdvertisements extends Thread{
-        public void run(){
+    class LoadAdvertisements {
+        LoadAdvertisements(){
+            CreateConnection connection = new CreateConnection("banners/getBanners", new HashMap<>(), HttpURLConnection.HTTP_OK, "GET");
+            connection.start();
             try {
-                URL get_image = new URL("https://ridebuddy.000webhostapp.com/get_image_lists.php");
-                HttpURLConnection httpURLConnection = (HttpURLConnection) get_image.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
-                System.out.println("###################Testing");
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String all_data = "", line;
-                while((line = bufferedReader.readLine()) != null){
-                    all_data += line;
-                }
-                System.out.println(all_data);
-                if(all_data.length() > 35){
-                    JSONObject jsonObject = new JSONObject(all_data);
-                    boolean status = jsonObject.getBoolean("status");
-                    if(status){
-                        ArrayList image_links_list = new ArrayList<String>();
-                        JSONArray image_links = jsonObject.getJSONArray("image_links");
-
-                        for(int i = 0; i < image_links.length(); i++){
-                            JSONObject single_link = image_links.getJSONObject(i);
-                            System.out.println(single_link.getString("image_link"));
-                            image_links_list.add(single_link.getString("image_link"));
-                        }
-                        // Implementing Listview
-                        HomeScreen.CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), image_links_list);
-
-                        runOnUiThread(new Runnable() {
+                connection.join();
+                JSONArray bannerArray = connection.getJsonResponse().getJSONArray("data");
+                if (bannerArray != null) {
+                    ArrayList<String> bannerLinks = new ArrayList<>();
+                    for (int i = 0; i < bannerArray.length(); i++) {
+                        System.out.println(bannerArray.getJSONObject(i).getString("bannerLink"));
+                        bannerLinks.add(bannerArray.getJSONObject(i).getString("bannerLink"));
+                    }
+                    HomeScreen.CustomAdapter customAdapter = new CustomAdapter(getApplicationContext(), bannerLinks);
+                    runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 ListView listView = findViewById(R.id.list_view);
                                 listView.setAdapter(customAdapter);
-
                             }
                         });
-                    }
                 }
-
-            } catch (MalformedURLException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
+            } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (JSONException e) {
-                System.out.println("Adds are not loading");
+                throw new RuntimeException(e);
             }
+
+
         }
     }
 }

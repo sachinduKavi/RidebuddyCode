@@ -42,8 +42,10 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Registration extends AppCompatActivity {
@@ -114,57 +116,24 @@ public class Registration extends AppCompatActivity {
     public void onRegistration(View view) {
         // Sending bitmap image to Server
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        if(bitmap_image != null){
+        if(bitmap_image != null) {
             bitmap_image.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] bytes = byteArrayOutputStream.toByteArray();
             final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-            // Creating Volley requests
-            RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-            String url = "https://ridebuddy.000webhostapp.com/vehicle_registration.php";
+            LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+            params.put("regNum", registration_number.getText());
+            params.put("owner", sharedPreferences.getString("userID", null));
+            params.put("image", base64Image);
+            params.put("seats", Integer.valueOf(seats.getText().toString()));
+            params.put("status", "Pending");
+            params.put("chassisNumber", chassis_number.getText());
 
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    System.out.println("Response" + response);
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        state = jsonObject.getString("state");
-                        System.out.println("Activity State: " + state);
-                        // Check whether data inserted or not
-                        if(state.equals("Data Inserted"))
-                            Toast.makeText(getApplicationContext(), "Vehicle registered successfully", Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(getApplicationContext(), "Failed vehicle registration", Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(getApplicationContext(), MyProfile.class));
-
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    System.out.println("Error" + error);
-                }
-            }){
-                protected Map<String, String> getParams(){
-                    Map<String, String> paramV = new HashMap<>();
-                    paramV.put("vehicle_image", base64Image);
-                    paramV.put("vehicle_type", spinner.getSelectedItem().toString());
-                    paramV.put("r_number", registration_number.getText().toString());
-                    paramV.put("c_number", chassis_number.getText().toString());
-                    paramV.put("seats", seats.getText().toString());
-                    paramV.put("email", sharedPreferences.getString("email", "null"));
-                    paramV.put("user_name", sharedPreferences.getString("user_name", "null"));
-
-                    return paramV;
-                }
-            };
-            queue.add(stringRequest);
+            CreateConnection connection = new CreateConnection("vehicle/registerVehicle", params, HttpURLConnection.HTTP_CREATED, "POST");
+            connection.start();
         }
-
     }
+
 
     public void addImage(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
